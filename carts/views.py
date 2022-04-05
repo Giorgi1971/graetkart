@@ -1,6 +1,7 @@
+from turtle import pen
 from django.shortcuts import redirect, render
 from carts.models import Cart, CartItem
-from store.models import Product
+from store.models import Product, Variation
 # Create your views here.
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -12,6 +13,19 @@ def _cart_id(request):
 
 def add_cart(request, product_id):
     product = Product.objects.get(id=product_id)
+    product_variation = []
+    if request.method == 'POST':
+        for item in request.POST:
+            key = item
+            value = request.POST[key]
+
+            try:
+                variation = Variation.objects.get(product=product, variation_categoru__iexact=key, variation_value__iexact=value)
+                product_variation.append(variation)
+                print(variation)
+            except:
+                pass
+
 
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request)) #get cart using catr_id prezent in the session
