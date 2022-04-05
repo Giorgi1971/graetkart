@@ -1,4 +1,5 @@
 from turtle import pen
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from carts.models import Cart, CartItem
 from store.models import Product, Variation
@@ -20,7 +21,9 @@ def add_cart(request, product_id):
             value = request.POST[key]
 
             try:
-                variation = Variation.objects.get(product=product, variation_categoru__iexact=key, variation_value__iexact=value)
+                variation = Variation.objects.get(
+                    product=product, variation_category__iexact=key, variation_value__iexact=value
+                    )
                 product_variation.append(variation)
                 print(variation)
             except:
@@ -33,12 +36,44 @@ def add_cart(request, product_id):
         cart = Cart.objects.create(cart_id=_cart_id(request))
         cart.save()
 
-    try:
-        cart_item = CartItem.objects.get(product=product, cart=cart)
-        cart_item.quantity += 1
-    except CartItem.DoesNotExist:
+    is_cart_item_exists = CartItem.objects.filter(product=product, cart=cart).exists()
+
+    if is_cart_item_exists:
+        cart_item = CartItem.objects.filter(product=product, cart=cart)
+        # არსებული მახასიათებლები - > მონაცემთა ბაზიდან
+        # მიმდინარე მახასიათებლები - > product_variation
+        # item_id -> მონაცემთა ბაზიდან
+        ex_var_list = []
+        id = []
+
+        for item in cart_item:
+            exisring_variation = item.variations.all()
+            ex_var_list.append(list(exisring_variation))
+            id.append(item.id)
+
+        print(ex_var_list)
+        print(product_variation)
+
+        if product_variation in ex_var_list:
+            index = ex_var_list.index(product_variation)
+            item_id = id[index]
+            item = CartItem.objects.get(product=product, id=item_id)
+            item.quantity +=1
+            item.save()
+        else:
+            item = CartItem.objects.create(product=product, quantity=1, cart=cart)
+            if len(product_variation) > 0:
+                item.variations.clear()
+                item.variations.add(*product_variation)
+
+            item.save()
+
+    else:
         cart_item = CartItem.objects.create(product=product, quantity=1, cart=cart)
-    cart_item.save()
+        if len(product_variation) > 0:
+            cart_item.variations.clear()
+            cart_item.variations.add(*product_variation)
+        cart_item.save()
 
     return redirect('cart')
 
