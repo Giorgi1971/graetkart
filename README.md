@@ -4,3 +4,5 @@
 
 {% if products.has_other_pages %}
 
+{{ i.variation_category | capfirst }}: {{ i.variation_value | capfirst }}
+
