@@ -6,3 +6,6 @@
 
 {{ i.variation_category | capfirst }}: {{ i.variation_value | capfirst }}
 
+{{ form.first_name }}
+
+
