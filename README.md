@@ -8,4 +8,6 @@
 
 {{ form.first_name }}
 
+მეილის გაგზავნის დროს gmail-ზე
+Less secure app access   =>  on
 
