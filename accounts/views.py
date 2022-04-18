@@ -1,22 +1,18 @@
-from distutils import core
 from email.message import EmailMessage
-import imp
-from locale import currency
-from turtle import fd
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.contrib import auth
-# მეილის შემოწმება
+from .models import *
+# check mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
-
 
 
 def register(request):
@@ -40,23 +36,24 @@ def register(request):
             user.phone_number = phone_number
             user.save()
 
-            # მომხმარებლის აქტივიზაცია. is_active მეილის საშუალებით ########################################################
-            currenct_site = get_current_site(request)
+            # activate mail. is_active - by mail ###################################
+            current_site = get_current_site(request)
             mail_subject = 'Please, activate your account'
             message = render_to_string('accounts/account_verification_email.html', {
-                'user':user,  'domain':currenct_site, 
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)), 
+                'user': user, 'domain': current_site,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
             to_email = email
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
-            return redirect('/accounts/login/?command=verification&email='+email)
+            # messages.success(request, 'Thanks for register with us. We send verification Email, Please verify it.')
+            return redirect('/accounts/login/?command=verification&email=' + email)
 
     else:
         form = RegistrationForm()
     context = {
-        'form':form,
+        'form': form,
     }
     return render(request, 'accounts/register.html', context)
 
@@ -68,8 +65,8 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
         if user is not None:
             auth.login(request, user)
-            messages.success(request, 'You are Loggined')
-            return redirect('home')
+            messages.success(request, 'You are Logged in')
+            return redirect('dashboard')
         else:
             messages.error(request, "invalid login credentioals")
             return redirect('login')
@@ -87,7 +84,8 @@ def logout(request):
 def activate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
-        user = Account._default_manager.get(pk=uid)
+        print(uid)
+        user = Account.objects.get(pk=uid)
 
     except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
         user = None
@@ -98,7 +96,10 @@ def activate(request, uidb64, token):
         messages.success(request, 'Congratulation! Account Activated')
         return redirect('login')
     else:
-        messages.error(request, 'Invalid activation Link')
+        messages.error(request, 'Invalid activation Link!!!')
         return redirect('register')
 
-    return HttpResponse('ook') 
+
+@login_required(login_url='login')
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
