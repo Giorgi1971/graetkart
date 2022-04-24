@@ -7,5 +7,5 @@ from store.models import *
 
 def home(request):
     products = Product.objects.all().filter(is_avaliable=True)
-    context = {'products':products,}
+    context = {'products':products}
     return render(request, 'home.html', context)
