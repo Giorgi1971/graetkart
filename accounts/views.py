@@ -18,7 +18,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from carts.models import *
 from carts.views import _cart_id
-import requests  
+import requests
+
 
 def register(request):
     if request.method == 'POST':

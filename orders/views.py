@@ -4,12 +4,26 @@ import datetime
 from carts.models import CartItem
 from .models import Order
 from .forms import OrderForm
+from orders.models import Payment
+import json
 
 
 def payments(request):
+    body = json.loads(request.body)
+    order = Order.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
+    payment = Payment(
+        user=request.user,
+        payment_id=body['transID'],
+        payment_method=body['payment_method'],
+        amount_paid=order.order_total,
+        status=body['status'],
+    )
+    payment.save()
+    order.payment = order
+    order.is_ordered = True
+    order.save()
+    print('body - ', body)
     return render(request, 'orders/payments.html')
-
-
 
 
 def place_order(request, total=0, quantity=0):
@@ -20,8 +34,8 @@ def place_order(request, total=0, quantity=0):
     if cart_count <= 0:
         return redirect('store')
 
-    grand_total = 0
-    tax= 0
+    # grand_total = 0
+    # tax = 0
     for cart_item in cart_items:
         total += (cart_item.product.price * cart_item.quantity)
         quantity += cart_item.quantity
@@ -56,8 +70,8 @@ def place_order(request, total=0, quantity=0):
             yr = int(datetime.date.today().strftime('%Y'))
             dt = int(datetime.date.today().strftime('%d'))
             mt = int(datetime.date.today().strftime('%m'))
-            d = datetime.date(yr,mt,dt)
-            current_date = d.strftime("%Y%m%d") #20210305
+            d = datetime.date(yr, mt, dt)
+            current_date = d.strftime("%Y%m%d")  # 20210305
             order_number = current_date + str(data.id)
             data.order_number = order_number
             data.save()

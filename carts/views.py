@@ -1,9 +1,7 @@
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from carts.models import Cart, CartItem
 from store.models import Product, Variation
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
 
 
 def _cart_id(request):
@@ -31,7 +29,6 @@ def add_cart(request, product_id):
                     product_variation.append(variation)
                 except:
                     pass
-
         is_cart_item_exists = CartItem.objects.filter(product=product, user=current_user).exists()
 
         if is_cart_item_exists:
@@ -83,8 +80,6 @@ def add_cart(request, product_id):
                     product_variation.append(variation)
                 except:
                     pass
-
-
         try:
             cart = Cart.objects.get(cart_id=_cart_id(request)) #get cart using catr_id prezent in the session
         except Cart.DoesNotExist:
@@ -132,9 +127,9 @@ def add_cart(request, product_id):
 
 
 def cart(request, total=0, quantity=0, cart_items=None):
+    tax = 0
+    grand_total = 0
     try:
-        tax = 0
-        grand_total = 0
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active=True)
         else:
@@ -183,10 +178,9 @@ def minus_cart_item(request, cart_item_id):
 
 @login_required(login_url='login')
 def checkout(request, total=0, quantity=0, cart_items=None):
+    tax = 0
+    grand_total = 0
     try:
-        tax = 0
-        grand_total = 0
-        
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active=True)
         else:
@@ -203,5 +197,5 @@ def checkout(request, total=0, quantity=0, cart_items=None):
     except CartItem.DoesNotExist:
         pass
 
-    context = {'total':total, 'tax':tax, 'grand_total':grand_total, 'quantity':quantity, 'cart_items':cart_items}
+    context = {'total': total, 'tax': tax, 'grand_total': grand_total, 'quantity': quantity, 'cart_items': cart_items}
     return render(request, 'store/checkout.html', context)
