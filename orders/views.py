@@ -11,11 +11,8 @@ from django.template.loader import render_to_string
 
 
 def payments(request):
-    print(request.__dict__)
     body = json.loads(request.body)
-    print('before Order')
     order = Order.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
-    print('ppo')
     payment = Payment(
         user=request.user,
         payment_id=body['transID'],
@@ -32,12 +29,10 @@ def payments(request):
     # Move cart item in to Order Product table
     cart_items = CartItem.objects.filter(user=request.user)
     for item in cart_items:
-        print('for--')
         orderproduct = OrderProduct()
-        print(('forfor'))
         orderproduct.order_id = order.id
         orderproduct.payment = payment
-        orderproduct.user_is = request.user.id
+        orderproduct.user_id = request.user.id
         orderproduct.product_id = item.product_id
         orderproduct.quantity = item.quantity
         orderproduct.product_price = item.product.price
