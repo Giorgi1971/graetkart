@@ -1,16 +1,22 @@
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
-import datetime
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
 from carts.models import CartItem
-from .models import Order
 from .forms import OrderForm
-from orders.models import Payment
+import datetime
+from .models import Order, Payment, OrderProduct
 import json
+from store.models import Product
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 
 def payments(request):
+    print(request.__dict__)
     body = json.loads(request.body)
+    print('before Order')
+    print(request.user)
     order = Order.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
+    print('ppo')
     payment = Payment(
         user=request.user,
         payment_id=body['transID'],
@@ -19,7 +25,7 @@ def payments(request):
         status=body['status'],
     )
     payment.save()
-    order.payment = order
+    order.payment = payment
     order.is_ordered = True
     order.save()
     print('body - ', body)
