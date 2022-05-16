@@ -39,14 +39,32 @@ def payments(request):
         orderproduct.ordered = True
         orderproduct.save()
 
+        cart_item = CartItem.objects.get(id=item.id)
+        product_variation = cart_item.variations.all()
+        orderproduct = OrderProduct.objects.get(id=orderproduct.id)
+        orderproduct.variations.set(product_variation)
+        orderproduct.save()
 
-    # Reduce the quantity of sold products
+        # Reduce the quantity of sold products
+        product = Product.objects.get(id=item.product_id)
+        product.stock -= item.quantity
+        product.save()
 
-    # Clear Cart
+        # Clear Cart
+        CartItem.objects.filter(user=request.user).delete()
 
-    # Send order receive email to customer
+        # Send order receive email to customer
+        mail_subject = 'Thank for your Order'
+        message = render_to_string('orders/order_received_email.html', {
+            'user': request.user,
+            'order': order,
+        })
+        to_email = request.user.email
+        send_email = EmailMessage(mail_subject, message, to=[to_email])
 
-    # send order number and transaction id back to json
+        send_email.send()
+
+        # send order number and transaction id back to json
 
     return render(request, 'orders/payments.html')
 
@@ -114,3 +132,7 @@ def place_order(request, total=0, quantity=0):
             return HttpResponse('No valis form')
     else:
         return redirect('checkout')
+
+
+def order_complete(request):
+    return render(request, 'orders/order_complete.html')
