@@ -1,3 +1,5 @@
+from multiprocessing import context
+from typing import OrderedDict
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from carts.models import CartItem
@@ -65,8 +67,12 @@ def payments(request):
         send_email.send()
 
         # send order number and transaction id back to json
+        data = {
+            'order_number': order.order_number,
+            'transID': payment.payment_id,
+        }
 
-    return render(request, 'orders/payments.html')
+    return JsonResponse(data)
 
 
 def place_order(request, total=0, quantity=0):
@@ -135,4 +141,18 @@ def place_order(request, total=0, quantity=0):
 
 
 def order_complete(request):
-    return render(request, 'orders/order_complete.html')
+    order_number = request.GET.get('order_number')
+    transID = request.GET.get('payment_id')
+    try:
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        ordered_products = OrderProduct.objects.filter(order_id=order.id)
+        payment = Payment.objects.get(payment_id=transID)
+        context = {
+            'order': order,
+            'order_number': order.order_number,
+            'ordered_products': ordered_products, 
+            'transID': payment.payment_id,
+        }
+        return render(request, 'orders/order_complete.html', context)
+    except (Payment.DoesNotExist, Order.DoesNotExist):
+        return redirect('home')
