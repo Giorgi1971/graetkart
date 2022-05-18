@@ -1,5 +1,3 @@
-from multiprocessing import context
-from typing import OrderedDict
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from carts.models import CartItem
@@ -27,7 +25,7 @@ def payments(request):
     order.is_ordered = True
     order.save()
     print(request.user)
-
+ 
     # Move cart item in to Order Product table
     cart_items = CartItem.objects.filter(user=request.user)
     for item in cart_items:
@@ -41,36 +39,43 @@ def payments(request):
         orderproduct.ordered = True
         orderproduct.save()
 
+        print(item)
+        print(item.id)
+        print(item.product_id)
         cart_item = CartItem.objects.get(id=item.id)
+        print('-')
         product_variation = cart_item.variations.all()
         orderproduct = OrderProduct.objects.get(id=orderproduct.id)
+        print('-')
         orderproduct.variations.set(product_variation)
         orderproduct.save()
 
         # Reduce the quantity of sold products
         product = Product.objects.get(id=item.product_id)
         product.stock -= item.quantity
+        print('-')
         product.save()
 
-        # Clear Cart
-        CartItem.objects.filter(user=request.user).delete()
+    # Clear Cart
+    CartItem.objects.filter(user=request.user).delete()
+    print('-')
 
-        # Send order receive email to customer
-        mail_subject = 'Thank for your Order'
-        message = render_to_string('orders/order_received_email.html', {
-            'user': request.user,
-            'order': order,
-        })
-        to_email = request.user.email
-        send_email = EmailMessage(mail_subject, message, to=[to_email])
+    # Send order receive email to customer
+    mail_subject = 'Thank for your Order'
+    message = render_to_string('orders/order_received_email.html', {
+        'user': request.user,
+        'order': order,
+    })
+    to_email = request.user.email
+    send_email = EmailMessage(mail_subject, message, to=[to_email])
 
-        send_email.send()
+    send_email.send()
 
-        # send order number and transaction id back to json
-        data = {
-            'order_number': order.order_number,
-            'transID': payment.payment_id,
-        }
+    # send order number and transaction id back to json
+    data = {
+        'order_number': order.order_number,
+        'transID': payment.payment_id,
+    }
 
     return JsonResponse(data)
 
