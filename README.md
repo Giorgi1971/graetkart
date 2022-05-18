@@ -12,8 +12,8 @@
 Less secure app access   =>  on
 
 თუ გადამისამართება გვინდა იგივე გვერდზე updated მერე: 
-    url = request.META.get('HTTP_REFERER')
-    if request.method == 'POST':
-        try:
-            ...
-            return redirect(url)
+*    url = request.META.get('HTTP_REFERER')
+*    if request.method == 'POST':
+*        try:
+*            ...
+*            return redirect(url)
