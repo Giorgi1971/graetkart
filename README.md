@@ -15,5 +15,5 @@ Less secure app access   =>  on
 *    url = request.META.get('HTTP_REFERER')
 *    if request.method == 'POST':
 *        try:
-*            ...
+*            form = ReviewForm(request.POST, instance=reviews) ინსტანსი უნდა რომ ახალი არ შექმნას.
 *            return redirect(url)
