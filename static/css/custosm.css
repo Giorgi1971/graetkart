@@ -1,5 +1,9 @@
 /* hide review*/
 
+*{
+    color: aquamarine;
+}
+
 .rate > input{
     display: none;
 }
@@ -26,21 +30,8 @@
 
 
 /* half class */
-.rate .half:before{
+.rate.half:before{
     content: "\f089";
     position: absolute;
     padding-right: 0;
 }
-
-/* click an dhover */
-
-input:checked ~ label, label:hover ~ label{
-    color: #ffb503;
-}
-
-/* Hover highlites */
-input:checked + label:hover, input:hover ~ label:checked, input:checked ~ label:hover ~ label,
-label:hover ~ input:checked ~ label{
-    color: #cc9000;
-}
-  
