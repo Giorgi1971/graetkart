@@ -1,7 +1,5 @@
 /* hide review*/
-*{
-    background-color: #cc9000;
-}
+/* აქედან იღებს ცსს-ს */
 
 .rate > input{
     display: none;

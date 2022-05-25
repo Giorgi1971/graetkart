@@ -113,12 +113,13 @@
             Review:
             <textarea name="review" cols="30" rows="5" class="form-control" ></textarea><br>
             {% if user.is_authenticated %}
-            {% if order_product %}
-            <input type="submit" value="Submit Review" class="btn btn-primary">
 
-            {% else %}
-            <p>You must Purshase Product first! </p>
-            {% endif %}
+              {% if order_product %}
+                <input type="submit" value="Submit Review" class="btn btn-primary">
+              {% else %}
+                <p>You must Purshase Product first! </p>
+              {% endif %}
+
             {% else %}
 
             <p>
@@ -152,11 +153,11 @@
               <h6 class="mb-1">{{review.user.full_name }} </h6>
               <div class="rating-star">
                 <span>
-                  <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
-                  <i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
-                  <i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
-                  <i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
-                  <i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o{% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o{% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o{% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o{% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o{% endif %}" aria-hidden="true"></i>
                 </span>
               </div>
               {{ review.rating }}

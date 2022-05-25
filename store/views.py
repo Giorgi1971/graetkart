@@ -1,4 +1,3 @@
-from tkinter.messagebox import NO
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -59,7 +58,7 @@ def product_detail(request, category_slug, product_slug):
 
 def search(request):
     products = []
-    message = ''
+    message = 'გფნ'
     if 'keyword' in request.GET:
         keyword = request.GET.get('keyword')
         if keyword:
