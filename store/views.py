@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from carts.models import CartItem
 from orders.models import OrderProduct
@@ -12,10 +11,7 @@ from django.db.models import Q
 
 
 def store(request, category_slug=None):
-    categories = None
-    products = None
-    
-    if category_slug != None:
+    if category_slug is not None:
         categories = get_object_or_404(Category, slug=category_slug)
         products = Product.objects.filter(category=categories, is_avaliable=True)
         paginator = Paginator(products, 3)
@@ -23,13 +19,13 @@ def store(request, category_slug=None):
         paged_products = paginator.get_page(page)
         product_count = products.count()
     else:
-        products = Product.objects.all().filter(is_avaliable=True).order_by('-id')
+        products = Product.objects.all().filter(is_available=True).order_by('-id')
         paginator = Paginator(products, 3)
         page = request.GET.get('page')
         paged_products = paginator.get_page(page)
         product_count = products.count()
 
-    context = {'products':paged_products, 'product_count':product_count,}
+    context = {'products': paged_products, 'product_count': product_count}
     return render(request, 'store/store.html', context)
 
 
@@ -41,11 +37,11 @@ def product_detail(request, category_slug, product_slug):
         raise e
 
     if request.user.is_authenticated:
-
         try:
             order_product = OrderProduct.objects.filter(user=request.user, product_id=single_product.id).exists()
         except OrderProduct.DoesNotExist:
             order_product = None
+
     else:
         order_product = None
 
@@ -58,15 +54,17 @@ def product_detail(request, category_slug, product_slug):
 
 def search(request):
     products = []
-    message = 'გფნ'
+    message = 'აქ_რა_უნ_და_?'
     if 'keyword' in request.GET:
         keyword = request.GET.get('keyword')
         if keyword:
-            products = Product.objects.order_by('-create_dete').filter(Q(product_name__icontains=keyword) | Q(description__icontains=keyword))
+            products = Product.objects.order_by('-create_date').filter(
+                Q(product_name__icontains=keyword) | Q(description__icontains=keyword)
+            )
         else:
-            products = Product.objects.all().order_by('-create_dete')
-            message = 'You search empty prase'
-    context = {'products':products, 'message':message}
+            products = Product.objects.all().order_by('-create_date')
+            message = 'You search empty praise'
+    context = {'products': products, 'message': message}
     return render(request, 'store/store.html', context)
 
 
@@ -79,7 +77,6 @@ def submit_review(request, product_id):
             form.save()
             messages.success(request, 'Thank, fro Review Updated')
             return redirect(url)
-
 
         except ReviewRating.DoesNotExist:
             form = ReviewForm(request.POST)
@@ -95,6 +92,3 @@ def submit_review(request, product_id):
                 data.save()
                 messages.success(request, 'Thank, for Review!')
                 return redirect(url)
-
-
-

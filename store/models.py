@@ -6,16 +6,16 @@ from django.db.models import Avg, Count
 
 
 class Product(models.Model):
-    product_name    = models.CharField(max_length=200, unique=True)
-    slug            = models.SlugField(max_length=200, unique=True)
-    description     = models.CharField(max_length=50, blank=True, null=True)
-    price           = models.IntegerField()
-    images          = models.ImageField(upload_to='photos/products')
-    stock           = models.IntegerField()
-    is_avaliable    = models.BooleanField(default=True)
-    category        = models.ForeignKey(Category, on_delete=models.CASCADE)
-    create_dete     = models.DateTimeField(auto_now_add=True)
-    modify_dete     = models.DateTimeField(auto_now=True)
+    product_name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    description = models.CharField(max_length=50, blank=True, null=True)
+    price = models.IntegerField()
+    images = models.ImageField(upload_to='photos/products')
+    stock = models.IntegerField()
+    is_available = models.BooleanField(default=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(auto_now=True)
 
     def get_url(self):
         return reverse('product_detail', args=[self.category.slug, self.slug])
@@ -23,18 +23,18 @@ class Product(models.Model):
     def __str__(self) -> str:
         return self.product_name
 
-    def averageReview(self):
+    def average_review(self):
         reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(average=Avg('rating'))
         avg = 0
         if reviews['average'] is not None:
             avg = float(reviews['average'])
         return avg
 
-    def countReview(self):
+    def count_review(self):
         reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(count=Count('id'))
         count = 0
         if reviews['count'] is not None:
-            count = float(reviews['count'])
+            count = int(reviews['count'])
         return count
 
 
@@ -80,4 +80,3 @@ class ReviewRating(models.Model):
 
     def __str__(self) -> str:
         return self.subject
-

@@ -17,7 +17,7 @@
           </article> <!-- gallery-wrap .end// -->
         </aside>
 
-        <!-- მარჯვენა მხარე -->
+        <!-- right side -->
         <main class="col-md-6 border-left">
 
           <form action="{% url 'add_cart' single_product.id %}" method="POST">
@@ -27,12 +27,12 @@
               <h2 class="title">{{ single_product }}</h2>
               <div class="rating-star">
                 <span>
-                  <i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-                  <i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-                  <i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-                  <i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-                  <i class="fa fa-star{% if single_product.averageReview < 5.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-                  <span>{{ single_product.countReview }} reviews</span>
+                  <i class="fa fa-star{% if single_product.average_review < 0.5 %}-o{% elif single_product.average_review >= 0.5 and single_product.average_review < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if single_product.average_review < 1.5 %}-o{% elif single_product.average_review >= 1.5 and single_product.average_review < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.average_review >= 2.5 and single_product.average_review < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if single_product.average_review < 3.5 %}-o{% elif single_product.average_review >= 3.5 and single_product.average_review < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if single_product.average_review < 5.5 %}-o{% elif single_product.average_review >= 4.5 and single_product.average_review < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <span>  {{ single_product.count_review }} reviews</span>
                 </span>
               </div>
 
@@ -91,7 +91,7 @@
           <h5>
             Write Review
           </h5>
-          {{ single_product.averageReview }}
+          {{ single_product.average_review }}
            <div>
             <!-- Rating stars -->
             <label for="">How do you rate this product?</label><br>
@@ -117,7 +117,7 @@
               {% if order_product %}
                 <input type="submit" value="Submit Review" class="btn btn-primary">
               {% else %}
-                <p>You must Purshase Product first! </p>
+                <p>You must purchase Product first! </p>
               {% endif %}
 
             {% else %}
@@ -136,11 +136,11 @@
 
           <div class="rating-star">
             <span>
-              <i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-              <i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-              <i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-              <i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-              <i class="fa fa-star{% if single_product.averageReview < 5.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if single_product.average_review < 0.5 %}-o{% elif single_product.average_review >= 0.5 and single_product.average_review < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if single_product.average_review < 1.5 %}-o{% elif single_product.average_review >= 1.5 and single_product.average_review < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if single_product.average_review < 2.5 %}-o{% elif single_product.average_review >= 2.5 and single_product.average_review < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if single_product.average_review < 3.5 %}-o{% elif single_product.average_review >= 3.5 and single_product.average_review < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if single_product.average_review < 5.5 %}-o{% elif single_product.average_review >= 4.5 and single_product.average_review < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
             </span>
           </div>
         </header>
