@@ -19,6 +19,7 @@ from django.core.mail import EmailMessage
 from carts.models import *
 from carts.views import _cart_id
 import requests
+from orders.models import Order
 
 
 def register(request):
@@ -161,7 +162,12 @@ def activate(request, uidb64, token):
 
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
+    order_count = orders.count()
+    context = {
+        'order_count': order_count,
+    }
+    return render(request, 'accounts/dashboard.html', context)
 
 
 def forgotPassword(request):
@@ -229,3 +235,9 @@ def resetPassword(request):
             return redirect('resetPassword')
     else:
         return render(request, 'accounts/resetPassword.html')
+
+
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
+    context = {'orders': orders}
+    return render(request, 'accounts/my_orders.html', context)
