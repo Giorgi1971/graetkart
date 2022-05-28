@@ -21,3 +21,5 @@ Less secure app access   =>  on
 #### change password (check password-ის დახმარებით)
 *         if new_password == confirm_password:
 *            success = user.check_password(current_password)
+*            if success:
+*                user.set_password(new_password)
