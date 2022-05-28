@@ -17,3 +17,9 @@ Less secure app access   =>  on
 *        try:
 *            form = ReviewForm(request.POST, instance=reviews) ინსტანსი უნდა რომ ახალი არ შექმნას.
 *            return redirect(url)
+
+#### change password (check password-ის დახმარებით)
+*         if new_password == confirm_password:
+*            success = user.check_password(current_password)
+*            if success:
+*                user.set_password(new_password)
