@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render
 from carts.models import Cart, CartItem
 from store.models import Product, Variation
@@ -27,7 +28,7 @@ def add_cart(request, product_id):
                         product=product, variation_category__iexact=key, variation_value__iexact=value
                         )
                     product_variation.append(variation)
-                except:
+                except ObjectDoesNotExist:
                     pass
         is_cart_item_exists = CartItem.objects.filter(product=product, user=current_user).exists()
 
@@ -46,7 +47,7 @@ def add_cart(request, product_id):
                 index = ex_var_list.index(product_variation)
                 item_id = id[index]
                 item = CartItem.objects.get(product=product, id=item_id)
-                item.quantity +=1
+                item.quantity += 1
                 item.save()
             else:
                 item = CartItem.objects.create(product=product, quantity=1, user=current_user)
@@ -78,10 +79,10 @@ def add_cart(request, product_id):
                         product=product, variation_category__iexact=key, variation_value__iexact=value
                         )
                     product_variation.append(variation)
-                except:
+                except ObjectDoesNotExist:
                     pass
         try:
-            cart = Cart.objects.get(cart_id=_cart_id(request)) #get cart using catr_id prezent in the session
+            cart = Cart.objects.get(cart_id=_cart_id(request))  # get cart using cart_id present in the session
         except Cart.DoesNotExist:
             cart = Cart.objects.create(cart_id=_cart_id(request))
             cart.save()
@@ -97,8 +98,8 @@ def add_cart(request, product_id):
             id = []
 
             for item in cart_item:
-                exisring_variation = item.variations.all()
-                ex_var_list.append(list(exisring_variation))
+                existing_variation = item.variations.all()
+                ex_var_list.append(list(existing_variation))
                 id.append(item.id)
 
             if product_variation in ex_var_list:
@@ -106,7 +107,7 @@ def add_cart(request, product_id):
                 index = ex_var_list.index(product_variation)
                 item_id = id[index]
                 item = CartItem.objects.get(product=product, id=item_id)
-                item.quantity +=1
+                item.quantity += 1
                 item.save()
             else:
                 item = CartItem.objects.create(product=product, quantity=1, cart=cart)
@@ -145,11 +146,11 @@ def cart(request, total=0, quantity=0, cart_items=None):
     except CartItem.DoesNotExist:
         pass
 
-    context = {'total':total, 'tax':tax, 'grand_total':grand_total, 'quantity':quantity, 'cart_items':cart_items}
+    context = {'total': total, 'tax': tax, 'grand_total': grand_total, 'quantity': quantity, 'cart_items': cart_items}
     return render(request, 'store/cart.html', context)
 
 
-# ეს სხვანაირადაა უდემზე. 
+# It's different in UDEMY.
 def remove_cart_item(request, cart_item_id):
     if request.user.is_authenticated:
         cart_item = CartItem.objects.get(user=request.user, id=cart_item_id)
@@ -161,7 +162,7 @@ def remove_cart_item(request, cart_item_id):
     return redirect('cart')
 
 
-# ეს სხვანაირადაა უდემზე. 
+# It's different in UDEMY.
 def minus_cart_item(request, cart_item_id):
     if request.user.is_authenticated:
         cart_item = CartItem.objects.get(user=request.user, id=cart_item_id)

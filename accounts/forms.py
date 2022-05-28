@@ -3,8 +3,12 @@ from .models import *
 
 
 class RegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter Password', 'class': 'form-control'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password', 'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'placeholder': 'Enter Password', 'class': 'form-control'}
+    ))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'placeholder': 'Confirm Password', 'class': 'form-control'}
+    ))
 
     class Meta:
         model = Account
@@ -35,16 +39,15 @@ class UserForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
-        # self.fields['first_name'].widget.attrs['placeholder'] = 'First Name'
-        # self.fields['last_name'].widget.attrs['placeholder'] = 'Enter last Name'
-        # self.fields['phone_number'].widget.attrs['placeholder'] = 'Enter phone number'
-        # self.fields['email'].widget.attrs['placeholder'] = 'Enter Email address'
         for f in self.fields:
             self.fields[f].widget.attrs['class'] = 'form-control'
 
 
 class UserProfileForm(forms.ModelForm):
-    profile_picture = forms.ImageField(required=False, error_messages={'invalid': ('Image files only')}, widget=forms.FileInput)
+    profile_picture = forms.ImageField(
+        required=False, error_messages={'invalid': ('Image files only')}, widget=forms.FileInput
+    )
+
     class Meta:
         model = UserProfile
         fields = ('address_line_1', 'address_line_2', 'city', 'country', 'state', 'profile_picture')
