@@ -15,8 +15,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from carts.models import *
 from carts.views import _cart_id
-import requests
 from orders.models import Order, OrderProduct
+import requests
 
 
 def register(request):
@@ -104,7 +104,7 @@ def login(request):
                             index = ex_var_list.index(pr)
                             item_id = id[index]
                             item = CartItem.objects.get(id=item_id)
-                            item.quantity +=1
+                            item.quantity += 1
                             item.user = user
                             item.save()
                         else:
@@ -131,7 +131,7 @@ def login(request):
             except:
                 return redirect('dashboard')
         else:
-            messages.error(request, "invalid login credentioals")
+            messages.error(request, "invalid login credentials")
             return redirect('login')
 
     return render(request, 'accounts/login.html')
@@ -232,7 +232,7 @@ def resetPassword(request):
             user = Account.objects.get(pk=uid)
             user.set_password(password)
             user.save()
-            messages.success(request, 'Password resered Successfuly')
+            messages.success(request, 'Password reset Successfully')
             return redirect('login')
 
         else:
