@@ -23,3 +23,5 @@ Less secure app access   =>  on
 *            success = user.check_password(current_password)
 *            if success:
 *                user.set_password(new_password)
+
+##### pip install django-admin-thumbnails
