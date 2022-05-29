@@ -1,6 +1,8 @@
 /* hide review*/
 /* აქედან იღებს ცსს-ს */
-
+*{
+    background-color: #c8c8c8;
+}
 .rate > input{
     display: none;
 }

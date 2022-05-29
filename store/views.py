@@ -45,6 +45,7 @@ def product_detail(request, category_slug, product_slug):
     else:
         order_product = None
 
+    # get review
     reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
 
     product_gallery = ProductGallery.objects.filter(product_id=single_product.id)
