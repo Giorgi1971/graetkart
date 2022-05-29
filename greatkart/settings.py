@@ -28,7 +28,7 @@ EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['greatkart-course-env.eba-ctsitjtw.us-west-2.elasticbeanstalk.com']
 
 
 # Application definition
